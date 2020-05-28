@@ -1,0 +1,1 @@
+[1/1] Linking C shared library /Users/simon/work/study/flutter/luavm/example/build/luavm/intermediates/cmake/release/obj/arm64-v8a/liblua-core.so

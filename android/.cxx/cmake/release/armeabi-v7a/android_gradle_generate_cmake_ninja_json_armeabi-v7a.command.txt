@@ -1,0 +1,14 @@
+Executable : /Users/simon/Library/Android/sdk/cmake/3.6.4111459/bin/cmake
+arguments : 
+-H/Users/simon/work/study/flutter/luavm/android
+-B/Users/simon/work/study/flutter/luavm/android/.cxx/cmake/release/armeabi-v7a
+-DANDROID_ABI=armeabi-v7a
+-DANDROID_PLATFORM=android-21
+-DCMAKE_LIBRARY_OUTPUT_DIRECTORY=/Users/simon/work/study/flutter/luavm/example/build/luavm/intermediates/cmake/release/obj/armeabi-v7a
+-DCMAKE_BUILD_TYPE=Release
+-DANDROID_NDK=/Users/simon/Library/Android/sdk/ndk-bundle
+-DCMAKE_TOOLCHAIN_FILE=/Users/simon/Library/Android/sdk/ndk-bundle/build/cmake/android.toolchain.cmake
+-DCMAKE_MAKE_PROGRAM=/Users/simon/Library/Android/sdk/cmake/3.6.4111459/bin/ninja
+-GAndroid Gradle - Ninja
+jvmArgs : 
+

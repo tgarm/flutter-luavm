@@ -1,0 +1,22 @@
+PODS:
+  - Flutter (1.0.0)
+  - luavm (0.0.1):
+    - Flutter
+
+DEPENDENCIES:
+  - Flutter (from `Flutter`)
+  - luavm (from `.symlinks/plugins/luavm/ios`)
+
+EXTERNAL SOURCES:
+  Flutter:
+    :path: Flutter
+  luavm:
+    :path: ".symlinks/plugins/luavm/ios"
+
+SPEC CHECKSUMS:
+  Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
+  luavm: b7d5bb549527c6ad7ab0dd0cba561d62d5c67b6b
+
+PODFILE CHECKSUM: f32fb4e7c14f8b3ca19a369d7be425dd9241af27
+
+COCOAPODS: 1.8.4

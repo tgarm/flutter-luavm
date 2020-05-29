@@ -1,8 +1,7 @@
 name: luavm
 description: Provide simple Lua VM to Flutter
 version: 0.0.1
-author:
-homepage:
+repository: https://github.com/tgarm/flutter-luavm
 
 environment:
   sdk: ">=2.7.0 <3.0.0"

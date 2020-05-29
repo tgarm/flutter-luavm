@@ -53,7 +53,7 @@ class Luavm {
     return success;
   }
 
-  static Future<String> eval(String name, String code) async {
+  static Future<List> eval(String name, String code) async {
     try {
       if (name != null && _vms.contains(name)) {
         final res = await _channel.invokeMethod<List>(
@@ -61,7 +61,7 @@ class Luavm {
         if (res[0] != 'OK') {
           throw LuaError(json.encode(res));
         }
-        return json.encode(res.sublist(1));
+        return res.sublist(1);
       } else {
         throw LuaError("VM[$name] not exists");
       }

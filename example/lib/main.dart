@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:luavm/luavm.dart';
@@ -15,7 +13,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   final _nameCtrl = TextEditingController(text: 'base');
-  final _codeCtrl = TextEditingController(text: 'return hi(3)');
+  final _codeCtrl = TextEditingController(text: 'return hi(3),_VERSION,3*4');
 
   String _luaRes = 'Unknown';
   bool _luaError = false;
@@ -24,7 +22,9 @@ class _MyAppState extends State<MyApp> {
     String luaRes;
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
-      luaRes = await Luavm.eval(_nameCtrl.text, _codeCtrl.text);
+      final reslist = await Luavm.eval(_nameCtrl.text, _codeCtrl.text);
+      luaRes = reslist.join("\n");
+
       _luaError = false;
     } on LuaError catch (e) {
       setState(() {
@@ -35,7 +35,7 @@ class _MyAppState extends State<MyApp> {
 
     if (luaRes != null && luaRes.length > 0) {
       setState(() {
-        _luaRes = json.encode(luaRes);
+        _luaRes = luaRes;
       });
     }
     // If the widget was removed from the tree while the asynchronous platform

@@ -1,3 +1,7 @@
+## 0.1.1
+
+* Fix document badges
+
 ## 0.1.0
 
 * Fix document and format for `pub.dev` requirements.

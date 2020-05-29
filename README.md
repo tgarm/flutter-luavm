@@ -1,16 +1,18 @@
 Flutter Lua VM Plugin
 =====================
 
-[![Pub package](https://img.shields.io/pub/v/flutter_lua.svg)](https://pub.dartlang.org/packages/flutter_lua)
+[![Pub package](https://img.shields.io/pub/v/luavm.svg)](https://pub.dev/packages/luavm)
+[![Dartdoc reference](https://img.shields.io/badge/dartdoc-reference-blue.svg)](https://pub.dev/documentation/luavm/latest/)
 
-A Flutter plugin provides Lua virtual machine 
-This plugin is inspired by [flutter_lua](https://github.com/drydart/flutter_lua)
+A Flutter plugin provides Lua virtual machine
+
+This plugin is inspired by [flutter_lua](https://github.com/drydart/flutter_lua), a Go based Lua implementation for Flutter.
 
 ## Getting Started
 
 #### Features
 
-* Supports the latest stable [Lua 5.3.5](https://www.lua.org/manual/5.3/)
+* Supports the latest stable vanilla [Lua 5.3.5](https://www.lua.org/manual/5.3/)
 * Support multiple Lua instances (don't be too much. <=100 instances)
 * Lua script runs in platform thread
 * Use Java/ObjC to avoid the annoying Swift version compatibility problem
@@ -19,7 +21,6 @@ This plugin is inspired by [flutter_lua](https://github.com/drydart/flutter_lua)
 
 * Lua library  "os" is **NOT** supported yet, due to unsupported functions in iOS: _system_ and _tmpnam_
 * All returned values will be converted to string
-
 
 ## Usage
 

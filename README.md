@@ -12,7 +12,7 @@ This plugin is inspired by [flutter_lua](https://github.com/drydart/flutter_lua)
 
 #### Features
 
-* Supports the latest stable vanilla [Lua 5.3.5](https://www.lua.org/manual/5.3/)
+* Supports the latest stable vanilla [Lua 5.4.0](https://www.lua.org/manual/5.4/)
 * Support multiple Lua instances (don't be too much. <=100 instances)
 * Lua script runs in platform thread
 * Use Java/ObjC to avoid the annoying Swift version compatibility problem
@@ -57,7 +57,7 @@ final res = await Luavm.eval("name","return _VERSION")
 res should be returned as:
 
 ```dart
-["Lua 5.3"]
+["Lua 5.4"]
 ```
 
 
@@ -89,4 +89,10 @@ await Luavm.close("name");
 #### Error Handling
 
 Errors will be thrown as _LuaError_ which contains error message as a string.
+
+
+
+## How to contribute
+
+Welcome to create issue about bug, feature request, etc.
 

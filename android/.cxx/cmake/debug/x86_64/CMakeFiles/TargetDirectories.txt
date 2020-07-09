@@ -1,3 +1,0 @@
-/Users/simon/work/study/flutter/luavm/android/.cxx/cmake/debug/x86_64/CMakeFiles/edit_cache.dir
-/Users/simon/work/study/flutter/luavm/android/.cxx/cmake/debug/x86_64/CMakeFiles/rebuild_cache.dir
-/Users/simon/work/study/flutter/luavm/android/.cxx/cmake/debug/x86_64/CMakeFiles/lua-core.dir

@@ -1,3 +1,7 @@
+## 0.2.0
+
+- Upgrade to the newest Lua 5.4.0
+
 ## 0.1.1
 
 * Fix document badges

@@ -2,6 +2,38 @@
 #import "lua.h"
 #import "lauxlib.h"
 #import "lualib.h"
+#import "lfs.h"
+
+
+static char log_buf[256] = {0};
+
+void lua_writestring(const char *s, size_t l){
+	size_t sblen = strlen(log_buf);
+	if(sblen+l>=sizeof(log_buf)){
+		lua_writeline();
+		sblen = 0;
+		if(l>=sizeof(log_buf)){
+			char *buf = alloca(l+1);
+			strncpy(buf,s,l);
+			buf[l] = 0;
+			NSLog(@"LuaVM:%s",buf);
+			l = 0;
+		}
+	}
+	if(l>0){
+		strncat(log_buf,s,l);
+		log_buf[sblen+l] = 0;
+	}
+}
+
+void lua_writeline(void){
+	NSLog(@"LuaVM:%s",log_buf);
+	memset(log_buf,0,sizeof(log_buf));
+}
+
+void lua_writestringerror(const char *s, const char *p){
+	NSLog(@"LuaVM Error:%s %s",s,p);
+}
 
 @implementation Luavm
 static Luavm * instance = nil;
@@ -19,6 +51,8 @@ static lua_State *vms[MAX_VMS] = {NULL};
             lua_State *L = luaL_newstate();
             if(L){
                 luaL_openlibs(L);
+    			luaL_requiref(L, "lfs", luaopen_lfs, 1);
+				lua_pop(L,1);
                 vms[i] = L;
                 return [NSNumber numberWithInt:i];
             }

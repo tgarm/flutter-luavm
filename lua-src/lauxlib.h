@@ -12,8 +12,8 @@
 #include <stddef.h>
 #include <stdio.h>
 
+#include "flutter_platform.h"
 #include "lua.h"
-
 
 /* global table */
 #define LUA_GNAME	"_G"
@@ -230,21 +230,7 @@ typedef struct luaL_Stream {
 ** ===================================================================
 */
 
-/* print a string */
-#if !defined(lua_writestring)
-#define lua_writestring(s,l)   fwrite((s), sizeof(char), (l), stdout)
-#endif
-
-/* print a newline and flush the output */
-#if !defined(lua_writeline)
-#define lua_writeline()        (lua_writestring("\n", 1), fflush(stdout))
-#endif
-
-/* print an error message */
-#if !defined(lua_writestringerror)
-#define lua_writestringerror(s,p) \
-        (fprintf(stderr, (s), (p)), fflush(stderr))
-#endif
+/* note: in flutter_luavm, lua_writestring, lua_writeline and lua_writestringerror is now a function */
 
 /* }================================================================== */
 

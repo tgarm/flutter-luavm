@@ -1,11 +1,45 @@
 #include <string.h>
+#include <stdlib.h>
 #include "com_github_tgarm_luavm_LuaJNI.h"
 #include "lua.h"
 #include "lauxlib.h"
 #include "lualib.h"
+#include "lfs.h"
+#include <android/log.h>
 
 #define MAX_VMS	100
 static lua_State *vms[MAX_VMS] = {NULL};
+
+static char log_buf[256] = {0};
+
+void lua_writestring(const char *s, size_t l){
+	size_t sblen = strlen(log_buf);
+	if(sblen+l>=sizeof(log_buf)){
+		lua_writeline();
+		sblen = 0;
+		if(l>=sizeof(log_buf)){
+			char *buf = alloca(l+1);
+			strncpy(buf,s,l);
+			buf[l] = 0;
+			__android_log_print(ANDROID_LOG_INFO,"flutter","LuaVM:%s",buf);
+			l = 0;
+		}
+	}
+	if(l>0){
+		strncat(log_buf,s,l);
+		log_buf[sblen+l] = 0;
+	}
+}
+
+void lua_writeline(void){
+	__android_log_print(ANDROID_LOG_INFO,"flutter","LuaVM:%s",log_buf);
+	memset(log_buf,0,sizeof(log_buf));
+}
+
+void lua_writestringerror(const char *s, const char *p){
+	__android_log_print(ANDROID_LOG_ERROR,"flutter","LuaVM Error:%s %s",s,p);
+}
+
 
 
 JNIEXPORT jint JNICALL Java_com_github_tgarm_luavm_LuaJNI_open
@@ -15,6 +49,8 @@ JNIEXPORT jint JNICALL Java_com_github_tgarm_luavm_LuaJNI_open
 			lua_State *L = luaL_newstate();
 			if(L){
 				luaL_openlibs(L);
+    			luaL_requiref(L, "lfs", luaopen_lfs, 1);
+				lua_pop(L,1);
 				vms[i] = L;
 				return i;
 			}

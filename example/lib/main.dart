@@ -1,19 +1,29 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:luavm/luavm.dart';
+import 'pickfile.dart';
 
 void main() {
   runApp(MyApp());
 }
 
-class MyApp extends StatefulWidget {
+class MyApp extends StatelessWidget {
+  const MyApp({Key key}) : super(key: key);
+
   @override
-  _MyAppState createState() => _MyAppState();
+  Widget build(BuildContext context) {
+    return MaterialApp(home: HomePage());
+  }
 }
 
-class _MyAppState extends State<MyApp> {
+class HomePage extends StatefulWidget {
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
   final _nameCtrl = TextEditingController(text: 'base');
-  final _codeCtrl = TextEditingController(text: 'return hi(3),_VERSION,3*4');
+  final _codeCtrl = TextEditingController(text: "print('hello')\nprint('world')\nreturn hi(3),_VERSION,3*4");
 
   String _luaRes = 'Unknown';
   bool _luaError = false;
@@ -53,6 +63,16 @@ class _MyAppState extends State<MyApp> {
       await Luavm.eval(name, "function hi(n) return 'hi-$name-'..n end");
     }
     setState(() {});
+  }
+
+  Future<void> pickLuaFile(BuildContext context) async {
+    final src =
+        await Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+      return PickFilePage();
+    }));
+    if (src != null) {
+      _codeCtrl.text = src;
+    }
   }
 
   @override
@@ -98,23 +118,30 @@ class _MyAppState extends State<MyApp> {
       style = TextStyle(color: Colors.red);
     }
 
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Example of LuaVM'),
-        ),
-        body: Center(
-            child: Column(children: [
-          nameLine(),
-          TextField(controller: _codeCtrl, autocorrect: false),
-          MaterialButton(
-              onPressed: () async {
-                await runCode();
-              },
-              child: Text('Run')),
-          Text(_luaRes, style: style),
-        ], mainAxisAlignment: MainAxisAlignment.spaceEvenly)),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Example of LuaVM'),
       ),
+      body: Center(
+          child: Column(children: [
+        nameLine(),
+        Row(children:<Widget>[
+        MaterialButton(
+          color: Colors.blue,
+            onPressed: () async {
+              await runCode();
+            },
+            child: Text('Run')),
+        MaterialButton(
+          color: Colors.blue,
+            onPressed: () async {
+              await pickLuaFile(context);
+            },
+            child: Text('Pick'))],
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly),
+        TextField(controller: _codeCtrl, autocorrect: false, maxLines: 15),            
+        Text(_luaRes, style: style),
+      ], mainAxisAlignment: MainAxisAlignment.spaceEvenly)),
     );
   }
 }

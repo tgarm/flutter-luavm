@@ -11,12 +11,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:luavm_example/main.dart';
 
 void main() {
-  testWidgets('LuaVM Name', (WidgetTester tester) async {
+  testWidgets('LuaVM Run', (WidgetTester tester) async {
     await tester.pumpWidget(MyApp());
-    expect(
-      find.byWidgetPredicate((Widget widget) =>
-          widget is TextField && widget.controller.text == 'base'),
-      findsOneWidget,
-    );
+    final runFinder = find.text('Run');
+    expect(runFinder, findsOneWidget);
   });
 }

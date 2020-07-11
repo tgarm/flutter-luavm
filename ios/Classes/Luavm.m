@@ -3,7 +3,7 @@
 #import "lauxlib.h"
 #import "lualib.h"
 #import "lfs.h"
-
+#import "lua_cjson.h"
 
 static char log_buf[256] = {0};
 
@@ -52,6 +52,10 @@ static lua_State *vms[MAX_VMS] = {NULL};
             if(L){
                 luaL_openlibs(L);
     			luaL_requiref(L, "lfs", luaopen_lfs, 1);
+				lua_pop(L,1);
+    			luaL_requiref(L, "cjson", luaopen_cjson, 1);
+				lua_pop(L,1);
+    			luaL_requiref(L, "cjson_safe", luaopen_cjson_safe, 1);
 				lua_pop(L,1);
                 vms[i] = L;
                 return [NSNumber numberWithInt:i];

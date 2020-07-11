@@ -8,6 +8,7 @@ set(LUA_SOURCE_DIR "../lua-src")
 include_directories(
 	${LUA_SOURCE_DIR}
 	${LUA_SOURCE_DIR}/lfs
+	${LUA_SOURCE_DIR}/cjson
 )
 if (JNI_FOUND)
 	include_directories(${JNI_INCLUDE_DIRS})
@@ -16,6 +17,7 @@ endif (JNI_FOUND)
 file(GLOB SOURCES 
 	${LUA_SOURCE_DIR}/*.c
 	${LUA_SOURCE_DIR}/lfs/*.c
+	${LUA_SOURCE_DIR}/cjson/*.c
 	src/main/native/lua-core.c
 )
 

@@ -5,6 +5,7 @@
 #include "lauxlib.h"
 #include "lualib.h"
 #include "lfs.h"
+#include "lua_cjson.h"
 #include <android/log.h>
 
 #define MAX_VMS	100
@@ -50,6 +51,10 @@ JNIEXPORT jint JNICALL Java_com_github_tgarm_luavm_LuaJNI_open
 			if(L){
 				luaL_openlibs(L);
     			luaL_requiref(L, "lfs", luaopen_lfs, 1);
+				lua_pop(L,1);
+    			luaL_requiref(L, "cjson", luaopen_cjson, 1);
+				lua_pop(L,1);
+    			luaL_requiref(L, "cjson_safe", luaopen_cjson_safe, 1);
 				lua_pop(L,1);
 				vms[i] = L;
 				return i;

@@ -1,3 +1,6 @@
+cj = cjson.new()
+cjs = cjson_safe.new()
+
 function attrdir (path)
 	if path==nil then
 		path = '.'
@@ -11,15 +14,16 @@ function attrdir (path)
 				if attr.mode == "directory" then
 					attrdir (f)
 				else
-					for name, value in pairs(attr) do
-						print (name, value)
-					end
+					print (cj.encode(attr))
+					print (cjs.encode(attr))
 				end
 			else
 				print ("type of",name, type(attr))
+				print(cjs.encode(attr))
 			end
 		end
 	end
 end
+
 
 attrdir (spath)

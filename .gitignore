@@ -1,7 +1,10 @@
 .DS_Store
 .dart_tool/
-
+.idea/
 .packages
 .pub/
 android/.cxx
 build/
+generated/
+/res/
+pubspec.lock

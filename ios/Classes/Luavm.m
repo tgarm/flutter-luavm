@@ -39,6 +39,16 @@ void lua_writestringerror(const char *s, const char *p){
 static Luavm * instance = nil;
 #define MAX_VMS 100
 static lua_State *vms[MAX_VMS] = {NULL};
+static dispatch_queue_t dqueues[MAX_VMS] = {NULL};
+
+static void new_dqueue(int idx){
+	if(dqueues[idx]==NULL){
+		char qname[100];
+		snprintf(qname,sizeof(qname),"luavm-%d",idx);
+		dqueues[idx] = dispatch_queue_create(qname,DISPATCH_QUEUE_CONCURRENT);
+	}
+}
+
 + (Luavm *)inst{
     if(instance==nil){
         instance = [[Luavm alloc] init];
@@ -51,6 +61,8 @@ static lua_State *vms[MAX_VMS] = {NULL};
             lua_State *L = luaL_newstate();
             if(L){
                 luaL_openlibs(L);
+    			luaL_requiref(L, "vmplugin", luaopen_vmplugin, 1);
+				lua_pop(L,1);
     			luaL_requiref(L, "lfs", luaopen_lfs, 1);
 				lua_pop(L,1);
     			luaL_requiref(L, "cjson", luaopen_cjson, 1);
@@ -58,6 +70,7 @@ static lua_State *vms[MAX_VMS] = {NULL};
     			luaL_requiref(L, "cjson_safe", luaopen_cjson_safe, 1);
 				lua_pop(L,1);
                 vms[i] = L;
+				new_dqueue(i);
                 return [NSNumber numberWithInt:i];
             }
         }
@@ -70,18 +83,20 @@ static lua_State *vms[MAX_VMS] = {NULL};
         if(L){
             lua_close(L);
             vms[idx] = NULL;
+			dqueues[idx] = NULL;
             return [NSNumber numberWithBool:YES];
         }
     }
     return [NSNumber numberWithBool:NO];
 }
 
-- (NSArray *)eval:(int)idx withCode:(NSString *)code{
-    const char *restr = "Fail";
+- (NSString *)eval:(int)idx withCode:(NSString *)code withCallback:(LuavmCallback)callback{
     NSMutableArray *rets = [[NSMutableArray alloc] init];
     if(idx>=0&&idx<MAX_VMS){
         lua_State *L = vms[idx];
         if(L){
+            dispatch_async(dqueues[idx],^(void){
+            const char *restr = "Fail";
             int base = lua_gettop(L);
             int res = luaL_dostring(L, [code UTF8String]);
             int top = lua_gettop(L);
@@ -103,14 +118,18 @@ static lua_State *vms[MAX_VMS] = {NULL};
             if(top>base){
                 lua_pop(L, top-base);
             }
+                [rets insertObject:[NSString stringWithUTF8String:restr] atIndex:0];
+                dispatch_async(dispatch_get_main_queue(),^(void){
+                    callback([NSArray arrayWithArray:rets]);
+                });
+            });
+            return @"OK";
         }else{
-            restr = "VM Not exist";
+            return @"VM Not exist";
         }
     }else{
-        restr = "VM ID out of range";
+        return @"VM ID out of range";
     }
-    [rets insertObject:[NSString stringWithUTF8String:restr] atIndex:0];
-    return [NSArray arrayWithArray:rets];
 }
 
 @end

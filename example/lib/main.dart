@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
+import 'package:dio/dio.dart';
 import 'package:luavm/luavm.dart';
 import 'pickfile.dart';
 
@@ -23,10 +24,21 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final _nameCtrl = TextEditingController(text: 'base');
-  final _codeCtrl = TextEditingController(text: "print('hello')\nprint('world')\nreturn hi(3),_VERSION,3*4");
+  final _codeCtrl = TextEditingController(text: "return _VERSION");
 
   String _luaRes = 'Unknown';
   bool _luaError = false;
+
+  @override
+  void initState() {
+    Luavm.setMethodHandler('httpGet', httpGet);
+    super.initState();
+  }
+
+  Future<String> httpGet(String url) async {
+    final res = await Dio().get<String>(url);
+    return res.data;
+  }
 
   Future<void> runCode() async {
     String luaRes;
@@ -48,9 +60,6 @@ class _HomePageState extends State<HomePage> {
         _luaRes = luaRes;
       });
     }
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
     if (!mounted) return;
   }
 
@@ -60,7 +69,6 @@ class _HomePageState extends State<HomePage> {
       await Luavm.close(name);
     } else {
       await Luavm.open(name);
-      await Luavm.eval(name, "function hi(n) return 'hi-$name-'..n end");
     }
     setState(() {});
   }
@@ -125,21 +133,21 @@ class _HomePageState extends State<HomePage> {
       body: Center(
           child: Column(children: [
         nameLine(),
-        Row(children:<Widget>[
-        MaterialButton(
-          color: Colors.blue,
-            onPressed: () async {
-              await runCode();
-            },
-            child: Text('Run')),
-        MaterialButton(
-          color: Colors.blue,
-            onPressed: () async {
-              await pickLuaFile(context);
-            },
-            child: Text('Pick'))],
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly),
-        TextField(controller: _codeCtrl, autocorrect: false, maxLines: 15),            
+        Row(children: <Widget>[
+          MaterialButton(
+              color: Colors.blue,
+              onPressed: () async {
+                await runCode();
+              },
+              child: Text('Run')),
+          MaterialButton(
+              color: Colors.blue,
+              onPressed: () async {
+                await pickLuaFile(context);
+              },
+              child: Text('Pick'))
+        ], mainAxisAlignment: MainAxisAlignment.spaceEvenly),
+        TextField(controller: _codeCtrl, autocorrect: false, maxLines: 15),
         Text(_luaRes, style: style),
       ], mainAxisAlignment: MainAxisAlignment.spaceEvenly)),
     );

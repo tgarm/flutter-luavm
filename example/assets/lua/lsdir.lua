@@ -1,6 +1,7 @@
 cj = cjson.new()
 cjs = cjson_safe.new()
 
+local item_count = 0
 function attrdir (path)
 	if path==nil then
 		path = '.'
@@ -14,6 +15,7 @@ function attrdir (path)
 				if attr.mode == "directory" then
 					attrdir (f)
 				else
+					item_count = item_count + 1
 					print (cj.encode(attr))
 					print (cjs.encode(attr))
 				end
@@ -26,4 +28,6 @@ function attrdir (path)
 end
 
 
-attrdir (spath)
+attrdir (vmplugin.temp_dir)
+
+return item_count

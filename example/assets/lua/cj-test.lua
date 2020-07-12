@@ -6,3 +6,5 @@ local txt = cj.encode(tbl)
 print(txt)
 local tres = cj.decode(txt)
 print(tres.c[1])
+
+return 1,2,3

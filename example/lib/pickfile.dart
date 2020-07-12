@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:path_provider/path_provider.dart';
 
 class PickFilePage extends StatefulWidget {
   PickFilePage({Key key}) : super(key: key);
@@ -33,9 +32,7 @@ class _PickFilePageState extends State<PickFilePage> {
 
   Future<void> loadLuaFile(int idx) async {
     final path = luaPaths[idx];
-    String src = await rootBundle.loadString(path); 
-    final spath = await getApplicationSupportDirectory();
-    src = "spath='${spath.path}/..'\n$src";
+    String src = await rootBundle.loadString(path);
     Navigator.of(context).pop(src);
   }
 

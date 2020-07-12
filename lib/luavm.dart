@@ -2,7 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be found in the LICENSE file.
 
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:flutter/services.dart';
 import 'errors.dart';
@@ -15,12 +14,34 @@ class Luavm {
   static const MethodChannel _channel =
       const MethodChannel('com.github.tgarm.luavm');
 
+  static const MethodChannel _bchannel =
+      const MethodChannel('com.github.tgarm.luavm/back');
+
   // use a list to store vm names
   static List<String> _vms = [];
+  static Map<String, Function> _mthandlers = {};
+  static bool _initialized = false;
+  static void _init() {
+    if (!_initialized) {
+      _bchannel.setMethodCallHandler((call) async {
+        if (_mthandlers.containsKey(call.method)) {
+          return await _mthandlers[call.method](call.arguments);
+        } else {
+          throw LuaError("Unhandled Method ${call.method} from Lua");
+        }
+      });
+      _initialized = true;
+    }
+  }
+
+  static void setMethodHandler(String name, Function handler) {
+    _mthandlers[name] = handler;
+  }
 
   // open a new Lua vm with name, return true when succeed
   static Future<bool> open(String name) async {
     bool success = false;
+    _init();
     try {
       if (_vms.contains(name)) return null;
       final int idx = await _channel.invokeMethod('open');
@@ -67,15 +88,18 @@ class Luavm {
   static Future<List> eval(String name, String code) async {
     try {
       if (name != null && _vms.contains(name)) {
-        final res = await _channel.invokeMethod<List>(
+        final Map res = await _channel.invokeMethod<Map>(
             'eval', <String, dynamic>{"id": _vms.indexOf(name), "code": code});
-        if (res[0] != 'OK') {
-          throw LuaError(json.encode(res));
+        if (res.containsKey('res')) {
+          if (res['res'] == 'OK' && res.containsKey('data')) {
+            return res['data'];
+          } else {
+            throw LuaError(res['res']);
+          }
         }
-        return res.sublist(1);
-      } else {
-        throw LuaError("VM[$name] not exists");
+        throw LuaError('Luavm error');
       }
+      throw LuaError("VM[$name] not exists");
     } on PlatformException catch (e) {
       throw LuaError.from(e);
     }

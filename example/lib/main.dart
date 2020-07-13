@@ -63,8 +63,8 @@ class _HomePageState extends State<HomePage> {
     if (!mounted) return;
   }
 
-  // Platform messages are asynchronous, so we initialize in an async method.
-  Future<void> opLua(String name) async {
+  // Switch Lua VM between opened/closed
+  Future<void> vmSwitch(String name) async {
     if (Luavm.opened(name)) {
       await Luavm.close(name);
     } else {
@@ -112,7 +112,7 @@ class _HomePageState extends State<HomePage> {
         )),
         MaterialButton(
             onPressed: () async {
-              await opLua(_nameCtrl.text);
+              await vmSwitch(_nameCtrl.text);
             },
             child: Text(btnTitle))
       ],

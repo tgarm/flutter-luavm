@@ -9,8 +9,8 @@
 
 
 static int invoke_method(lua_State *L){
-    const char *method = luaL_checklstring(L, 1, NULL);
-    const char *args = luaL_checklstring(L, 2, NULL);
+    const char *method = luaL_tolstring(L, 1, NULL);
+    const char *args = luaL_tolstring(L, 2, NULL);
     
     NSString *res = [LuavmPlugin invokeMethod:[NSString stringWithUTF8String:method] withData:[NSString stringWithUTF8String:args]];
     lua_pushstring(L, [res UTF8String]);

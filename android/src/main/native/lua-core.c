@@ -6,7 +6,6 @@
 #include "lualib.h"
 #include "lfs.h"
 #include "lua_cjson.h"
-#include "vm-plugin.h"
 #include <android/log.h>
 
 #define MAX_VMS	100

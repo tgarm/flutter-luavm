@@ -5,7 +5,6 @@
 #include <lualib.h>
 #include <android/log.h>
 #include "com_github_tgarm_luavm_LuaJNI.h"
-#include "vm-plugin.h"
 
 static const char *s_temp_dir = "TEMP";
 static const char *s_doc_dir = "DOC";
@@ -31,8 +30,8 @@ static const char *call_plugin_invoker(const char *name, const char *args){
 }
 
 static int invoke_method(lua_State *L){
-    const char *method = luaL_checklstring(L, 1, NULL);
-    const char *args = luaL_checklstring(L, 2, NULL);
+    const char *method = luaL_tolstring(L, 1, NULL);
+    const char *args = luaL_tolstring(L, 2, NULL);
 
     const char *res = call_plugin_invoker(method, args);
     if(res) {

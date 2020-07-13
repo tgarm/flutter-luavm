@@ -105,6 +105,20 @@ Errors will be thrown as _LuaError_ which contains error message as a string.
 
 ## Lua Module Usage
 
+#### vmplugin
+
+Platform support module.
+
+```lua
+
+local doc_dir = vmplugin.doc_dir	-- Absolute directory for Application Document 
+local platform = vmplugin.platform  -- "ios" or "android"
+local temp_dir = vmplugin.temp_dir  -- Absolute directory for Temporary files, corresponding to Temporary Directory of iOS and CacheDir of Android
+
+local res = vmplugin.invoke_method("method-name","method-args")	-- this will invoke a Method Channel call, can be handled by Dart/Other Flutter plugins, currently only support pure string arguments
+
+```
+
 #### cjson
 
 ```lua

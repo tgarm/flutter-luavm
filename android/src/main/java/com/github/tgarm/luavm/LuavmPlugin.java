@@ -1,6 +1,11 @@
 package com.github.tgarm.luavm;
 
 import androidx.annotation.NonNull;
+
+import android.content.Context;
+import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
@@ -21,10 +26,69 @@ public class LuavmPlugin implements FlutterPlugin, MethodCallHandler {
   /// and unregister it
   /// when the Flutter Engine is detached from the Activity
   private MethodChannel channel;
+  private static MethodChannel bchannel;
+
+  private void init_plugin_data(Context context){
+    String temp_dir = context.getCacheDir().getAbsolutePath();
+    String doc_dir = "DOC_DIR";
+    if(Build.VERSION.SDK_INT>=24) {
+      doc_dir = context.getDataDir().getAbsolutePath();
+    }else{
+      doc_dir = temp_dir;
+    }
+    LuaJNI.set_dirs(temp_dir,doc_dir);
+    LuaJNI.set_plugin(this);
+  }
+
+  public String invoke_method(final String method, final String data) throws InterruptedException {
+    final boolean[] done = {false};
+    final String[] res = {""};
+    Runnable main_invoker = new Runnable(){
+      @Override public void run(){
+        bchannel.invokeMethod(method,data,new Result(){
+          @Override public void success(Object o){
+            res[0] = o.toString();
+            synchronized (done) {
+              done[0] = true;
+              done.notify();
+            }
+          }
+          @Override public void error(String s, String s1, Object o){
+            Log.e(s,s1);
+            res[0] = o.toString();
+            synchronized (done) {
+              done[0] = true;
+              done.notify();
+            }
+          }
+
+          @Override
+          public void notImplemented() {
+            res[0] = "not implemented";
+            synchronized (done) {
+              done[0] = true;
+              done.notify();
+            }
+          }
+        });
+      }
+    };
+
+    new Handler(Looper.getMainLooper()).post(main_invoker);
+    synchronized (done) {
+      while (done[0] == false) {
+        done.wait();
+      }
+    }
+    return res[0];
+  }
+
 
   @Override
   public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
     channel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(), "com.github.tgarm.luavm");
+    bchannel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(), "com.github.tgarm.luavm/back");
+    init_plugin_data(flutterPluginBinding.getApplicationContext());
     channel.setMethodCallHandler(this);
   }
 
@@ -44,12 +108,14 @@ public class LuavmPlugin implements FlutterPlugin, MethodCallHandler {
   // in the same class.
   public static void registerWith(Registrar registrar) {
     final MethodChannel channel = new MethodChannel(registrar.messenger(), "com.github.tgarm.luavm");
-    channel.setMethodCallHandler(new LuavmPlugin());
+    bchannel = new MethodChannel(registrar.messenger(), "com.github.tgarm.luavm/back");
+    final LuavmPlugin plugin = new LuavmPlugin();
+    plugin.init_plugin_data(registrar.context());
+    channel.setMethodCallHandler(plugin);
   }
-
   @Override
-  public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
-    int id;
+  public void onMethodCall(@NonNull MethodCall call, @NonNull final Result result) {
+    final int id;
     switch (call.method) {
       case "open":
         id = LuaJNI.open();
@@ -62,13 +128,21 @@ public class LuavmPlugin implements FlutterPlugin, MethodCallHandler {
         break;
       case "eval":
         id = call.argument("id");
-        String code = call.argument("code");
-        String restr[] = LuaJNI.eval(id, code);
-        ArrayList<String> res = new ArrayList<String>();
-        for (int i = 0; i < restr.length; i++) {
-          res.add(restr[i]);
-        }
-        result.success(res);
+        final String code = call.argument("code");
+        new Thread(new Runnable(){
+          @Override public void run() {
+            String restr[] = LuaJNI.eval(id, code);
+            final ArrayList<String> res = new ArrayList<String>();
+            for (int i = 0; i < restr.length; i++) {
+              res.add(restr[i]);
+            }
+            new Handler(Looper.getMainLooper()).post(new Runnable(){
+              @Override public void run() {
+                result.success(res);
+              }
+            });
+          }
+        }).start();
         break;
       default:
         result.notImplemented();

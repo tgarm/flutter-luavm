@@ -1,4 +1,4 @@
-local spath = vmplugin.temp_dir..".."
+local spath = vmplugin.temp_dir
 print ('Listing items of directory',spath)
 local i = 0
 for file in lfs.dir(spath) do

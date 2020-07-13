@@ -19,6 +19,7 @@ file(GLOB SOURCES
 	${LUA_SOURCE_DIR}/lfs/*.c
 	${LUA_SOURCE_DIR}/cjson/*.c
 	src/main/native/lua-core.c
+	src/main/native/vm-plugin.c
 )
 
 add_definitions(-Wno-deprecated)	# supress warning for tmpnam in lua source code

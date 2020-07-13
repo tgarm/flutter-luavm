@@ -88,13 +88,14 @@ class Luavm {
   static Future<List> eval(String name, String code) async {
     try {
       if (name != null && _vms.contains(name)) {
-        final Map res = await _channel.invokeMethod<Map>(
+        final List res = await _channel.invokeMethod<List>(
             'eval', <String, dynamic>{"id": _vms.indexOf(name), "code": code});
-        if (res.containsKey('res')) {
-          if (res['res'] == 'OK' && res.containsKey('data')) {
-            return res['data'];
+        if (res.length > 1) {
+          print("lua-res:$res");
+          if (res[0] == 'OK') {
+            return res.sublist(1);
           } else {
-            throw LuaError(res['res']);
+            throw LuaError(res[0]);
           }
         }
         throw LuaError('Luavm error');

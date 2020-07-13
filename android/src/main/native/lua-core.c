@@ -6,6 +6,7 @@
 #include "lualib.h"
 #include "lfs.h"
 #include "lua_cjson.h"
+#include "vm-plugin.h"
 #include <android/log.h>
 
 #define MAX_VMS	100
@@ -41,8 +42,6 @@ void lua_writestringerror(const char *s, const char *p){
 	__android_log_print(ANDROID_LOG_ERROR,"flutter","LuaVM Error:%s %s",s,p);
 }
 
-
-
 JNIEXPORT jint JNICALL Java_com_github_tgarm_luavm_LuaJNI_open
 (JNIEnv *env, jclass cls){
 	for(int i=0;i<MAX_VMS;i++){
@@ -55,6 +54,8 @@ JNIEXPORT jint JNICALL Java_com_github_tgarm_luavm_LuaJNI_open
     			luaL_requiref(L, "cjson", luaopen_cjson, 1);
 				lua_pop(L,1);
     			luaL_requiref(L, "cjson_safe", luaopen_cjson_safe, 1);
+				lua_pop(L,1);
+                luaL_requiref(L, "vmplugin", luaopen_vmplugin, 1);
 				lua_pop(L,1);
 				vms[i] = L;
 				return i;

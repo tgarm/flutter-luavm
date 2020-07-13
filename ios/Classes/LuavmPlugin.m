@@ -40,12 +40,10 @@ static FlutterMethodChannel *bchannel = nil;
       int idx = [[args objectForKey:@"id"] intValue];
       NSString *code = [args objectForKey:@"code"];
       NSString *res = [Luavm.inst eval:idx withCode:code withCallback:^(NSArray *ares){
-          NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithObject:@"OK" forKey:@"res"];
-          [dict setObject:ares forKey:@"data"];
-          result([NSDictionary dictionaryWithDictionary:dict]);
+          result(ares);
       }];
       if(![res isEqualToString:@"OK"]){
-          result([NSDictionary dictionaryWithObject:res forKey:@"res"]);
+          result([NSArray arrayWithObject:res]);
       }
   }else{
     result(FlutterMethodNotImplemented);

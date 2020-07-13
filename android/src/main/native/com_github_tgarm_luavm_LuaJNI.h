@@ -9,6 +9,22 @@ extern "C" {
 #endif
 /*
  * Class:     com_github_tgarm_luavm_LuaJNI
+ * Method:    set_plugin
+ * Signature: (Ljava/lang/Object;)V
+ */
+JNIEXPORT void JNICALL Java_com_github_tgarm_luavm_LuaJNI_set_1plugin
+  (JNIEnv *, jclass, jobject);
+
+/*
+ * Class:     com_github_tgarm_luavm_LuaJNI
+ * Method:    set_dirs
+ * Signature: (Ljava/lang/String;Ljava/lang/String;)V
+ */
+JNIEXPORT void JNICALL Java_com_github_tgarm_luavm_LuaJNI_set_1dirs
+  (JNIEnv *, jclass, jstring, jstring);
+
+/*
+ * Class:     com_github_tgarm_luavm_LuaJNI
  * Method:    open
  * Signature: ()I
  */

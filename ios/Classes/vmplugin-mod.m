@@ -17,7 +17,6 @@ static int invoke_method(lua_State *L){
 	return 1;
 }
 
-
 static const struct luaL_Reg vmlib[] = {
     {"invoke_method", invoke_method},
     {"platform", NULL},

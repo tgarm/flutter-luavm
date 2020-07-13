@@ -1,3 +1,8 @@
+## 0.3.0
+
+- Each Lua VM runs in a single separated thread
+- New Lua module __vmplugin__ for platform support, including invoke method call back to Dart, this enables the network connection initiated from Lua code
+
 ## 0.2.1
 
 - Lua "print" now outputs to Flutter console and system log (ADB and iOS NSLog)

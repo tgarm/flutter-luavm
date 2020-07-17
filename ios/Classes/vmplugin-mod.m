@@ -25,18 +25,18 @@ static const struct luaL_Reg vmlib[] = {
   { NULL, NULL },
 };
 
-static const char *docPath(){
-    NSURL *docURL = [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
-    return [[docURL absoluteString] UTF8String];
+static const char *nsPath(NSSearchPathDirectory dir){
+	NSArray *paths = NSSearchPathForDirectoriesInDomains(dir, NSUserDomainMask, YES);
+	return [paths.firstObject UTF8String];
 }
 
 int luaopen_vmplugin(lua_State * L){
 	luaL_newlib(L,vmlib);
     lua_pushstring(L,"ios");
     lua_setfield(L,-2,"platform");
-    lua_pushstring(L, [NSTemporaryDirectory() UTF8String]);
+    lua_pushstring(L, nsPath(NSCachesDirectory));
     lua_setfield(L, -2, "temp_dir");
-    lua_pushstring(L, docPath());
+    lua_pushstring(L, nsPath(NSDocumentDirectory));
     lua_setfield(L, -2, "doc_dir");
 	return 1;
 }

@@ -1,6 +1,6 @@
 name: luavm
 description: Provide simple Lua VMs to Flutter (now supports vanilla Lua 5.4.0)
-version: 0.3.0
+version: 0.3.1
 homepage: https://github.com/tgarm/flutter-luavm
 
 environment:

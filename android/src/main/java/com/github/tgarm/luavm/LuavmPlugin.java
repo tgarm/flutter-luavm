@@ -15,6 +15,8 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.PluginRegistry.Registrar;
 
+import io.flutter.util.PathUtils;
+
 import java.util.ArrayList;
 
 /** LuavmPlugin */
@@ -29,13 +31,9 @@ public class LuavmPlugin implements FlutterPlugin, MethodCallHandler {
   private static MethodChannel bchannel;
 
   private void init_plugin_data(Context context){
-    String temp_dir = context.getCacheDir().getAbsolutePath();
-    String doc_dir = "DOC_DIR";
-    if(Build.VERSION.SDK_INT>=24) {
-      doc_dir = context.getDataDir().getAbsolutePath();
-    }else{
-      doc_dir = temp_dir;
-    }
+    String temp_dir = context.getCacheDir().getPath();
+    String doc_dir =  PathUtils.getDataDirectory(context);
+
     LuaJNI.set_dirs(temp_dir,doc_dir);
     LuaJNI.set_plugin(this);
   }

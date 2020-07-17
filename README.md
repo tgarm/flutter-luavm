@@ -107,6 +107,24 @@ Errors will be thrown as _LuaError_ which contains error message as a string.
 
 ## Lua Module Usage
 
+
+#### about __require__
+
+To use internal Lua modules, no __require__ is needed.
+
+__require__ is now used to import Lua code only, please set __package.path__ properly before __require__.
+
+This may import local __lua__ file:
+
+```lua
+package.path = vmplugin.doc_dir.."/?.lua"
+
+local add = require('lib-add')
+```
+
+
+
+
 #### vmplugin
 
 It is a plugin specific module that provides platform support.

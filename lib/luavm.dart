@@ -90,7 +90,7 @@ class Luavm {
       if (name != null && _vms.contains(name)) {
         final List res = await _channel.invokeMethod<List>(
             'eval', <String, dynamic>{"id": _vms.indexOf(name), "code": code});
-        if (res.length > 1) {
+        if (res.length >= 1) {
           if (res[0] == 'OK') {
             return res.sublist(1);
           } else {

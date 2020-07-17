@@ -1,3 +1,8 @@
+## 0.3.1
+
+- __vmplugin.doc_dir__ now compatible with __path\_provider__, makes it easier for lua __require__
+- example support lua __require__
+
 ## 0.3.0
 
 - Each Lua VM runs in a single separated thread

@@ -25,7 +25,7 @@ Modules are loaded when a Lua VM starts. Can be used in Lua code directly.
 
 | Name                                                         | Global Name | Version         |
 | ------------------------------------------------------------ | ----------- | --------------- |
-| [LuaFileSystem](http://keplerproject.github.io/luafilesystem/) | lfs         | 1.8.0           |
+| [LuaFileSystem](https://keplerproject.github.io/luafilesystem/) | lfs         | 1.8.0           |
 | [lua-cjson](https://www.kyne.com.au/~mark/software/lua-cjson.php) | cjson       | 2.1.0           |
 |                                                              | cjson_safe  | 2.1.0           |
 | vmplugin                                                     | vmplugin    | Plugin Specific |

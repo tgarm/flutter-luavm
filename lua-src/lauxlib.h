@@ -15,6 +15,7 @@
 #include "flutter_platform.h"
 #include "lua.h"
 
+
 /* global table */
 #define LUA_GNAME	"_G"
 
@@ -229,9 +230,7 @@ typedef struct luaL_Stream {
 ** "Abstraction Layer" for basic report of messages and errors
 ** ===================================================================
 */
-
 /* note: in flutter_luavm, lua_writestring, lua_writeline and lua_writestringerror is now a function */
-
 /* }================================================================== */
 
 

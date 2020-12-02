@@ -1,3 +1,7 @@
+## 0.3.2
+
+- Upgrade Lua from 5.4.0 to 5.4.1
+
 ## 0.3.1
 
 - __vmplugin.doc_dir__ now compatible with __path\_provider__, makes it easier for lua __require__

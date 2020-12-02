@@ -12,7 +12,7 @@ This plugin is inspired by [flutter_lua](https://github.com/drydart/flutter_lua)
 
 #### Features
 
-* Supports the latest stable vanilla [Lua 5.4.0](https://www.lua.org/manual/5.4/)
+* Supports the latest stable vanilla [Lua 5.4.1](https://www.lua.org/manual/5.4/)
 * Supports multiple Lua instances (don't be too much. <=100 instances)
 * Each Lua instance runs in a separate thread
 * Lua "print" function outputs to Flutter console & Logging

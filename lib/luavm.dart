@@ -18,14 +18,14 @@ class Luavm {
       const MethodChannel('com.github.tgarm.luavm/back');
 
   // use a list to store vm names
-  static List<String> _vms = [];
+  static List<String?> _vms = [];
   static Map<String, Function> _mthandlers = {};
   static bool _initialized = false;
   static void _init() {
     if (!_initialized) {
       _bchannel.setMethodCallHandler((call) async {
         if (_mthandlers.containsKey(call.method)) {
-          return await _mthandlers[call.method](call.arguments);
+          return await _mthandlers[call.method]!(call.arguments);
         } else {
           throw LuaError("Unhandled Method ${call.method} from Lua");
         }
@@ -39,12 +39,12 @@ class Luavm {
   }
 
   // open a new Lua vm with name, return true when succeed
-  static Future<bool> open(String name) async {
+  static Future<bool?> open(String name) async {
     bool success = false;
     _init();
     try {
       if (_vms.contains(name)) return null;
-      final int idx = await _channel.invokeMethod('open');
+      final int idx = await (_channel.invokeMethod('open') as FutureOr<int>);
       if (idx >= 0) {
         while (_vms.length <= idx) {
           _vms.add(null);
@@ -67,12 +67,12 @@ class Luavm {
   }
 
   // close a Lua vm, return true when succeed
-  static Future<bool> close(String name) async {
-    bool success = false;
+  static Future<bool?> close(String name) async {
+    bool? success = false;
     try {
       if (_vms.contains(name)) {
         final int idx = _vms.indexOf(name);
-        success = await _channel.invokeMethod('close', idx);
+        success = await (_channel.invokeMethod('close', idx) as FutureOr<bool>);
         if (success) {
           _vms[idx] = null;
         }
@@ -88,8 +88,8 @@ class Luavm {
   static Future<List> eval(String name, String code) async {
     try {
       if (name != null && _vms.contains(name)) {
-        final List res = await _channel.invokeMethod<List>(
-            'eval', <String, dynamic>{"id": _vms.indexOf(name), "code": code});
+        final List res = (await _channel.invokeMethod<List>('eval',
+            <String, dynamic>{"id": _vms.indexOf(name), "code": code}))!;
         if (res.length >= 1) {
           if (res[0] == 'OK') {
             return res.sublist(1);

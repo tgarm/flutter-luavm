@@ -6,7 +6,7 @@ import 'dart:io';
 
 /// A Lua VM error.
 class LuaError implements IOException {
-  final String message;
+  final String? message;
 
   const LuaError(this.message);
 
@@ -17,7 +17,7 @@ class LuaError implements IOException {
   String toString() {
     final buffer = StringBuffer();
     buffer.write("LuaError");
-    if (message.isNotEmpty) {
+    if (message!.isNotEmpty) {
       buffer..write(": ")..write(message);
     }
     return buffer.toString();

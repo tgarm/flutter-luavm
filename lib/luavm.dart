@@ -44,7 +44,7 @@ class Luavm {
     _init();
     try {
       if (_vms.contains(name)) return null;
-      final int idx = await (_channel.invokeMethod('open') as FutureOr<int>);
+      final int idx = await _channel.invokeMethod('open');
       if (idx >= 0) {
         while (_vms.length <= idx) {
           _vms.add(null);
@@ -72,8 +72,8 @@ class Luavm {
     try {
       if (_vms.contains(name)) {
         final int idx = _vms.indexOf(name);
-        success = await (_channel.invokeMethod('close', idx) as FutureOr<bool>);
-        if (success) {
+        success = await _channel.invokeMethod('close', idx);
+        if (success!) {
           _vms[idx] = null;
         }
       }
@@ -87,7 +87,7 @@ class Luavm {
   // returns a list of result, when there is no result, just return an empty list
   static Future<List> eval(String name, String code) async {
     try {
-      if (name != null && _vms.contains(name)) {
+      if (_vms.contains(name)) {
         final List res = (await _channel.invokeMethod<List>('eval',
             <String, dynamic>{"id": _vms.indexOf(name), "code": code}))!;
         if (res.length >= 1) {

@@ -4,16 +4,17 @@ import 'package:luavm/luavm.dart';
 
 void main() {
   const MethodChannel channel = MethodChannel('com.github.tgarm.luavm');
+  final dbm = TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
   TestWidgetsFlutterBinding.ensureInitialized();
 
   setUp(() {
-    channel.setMockMethodCallHandler((MethodCall methodCall) async {
+    dbm.setMockMethodCallHandler(channel, (MethodCall methodCall) async {
       return 0;
     });
   });
 
   tearDown(() {
-    channel.setMockMethodCallHandler(null);
+    dbm.setMockMethodCallHandler(channel, null);
   });
 
   test('open', () async {
